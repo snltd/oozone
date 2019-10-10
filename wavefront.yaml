@@ -1,0 +1,29 @@
+---
+brand: pkgsrc
+zonepath: /zones/wavefront
+autoboot: true
+fs:
+  - dir: /home
+    special: /home
+    type: lofs
+  - dir: /storage
+    special: /storage
+    type: lofs
+net:
+  - physical: test0
+    'global-nic': auto
+    'allowed-address': 192.168.1.39/24
+    'defrouter': 192.168.1.1
+dns:
+  domain: localnet
+  search: localnet
+  resolvers:
+    - 192.168.1.26
+    - 192.168.1.1
+run_cmd:
+  'echo "something" >/etc/release'
+upload:
+  /var/tmp/merp: /var/tmp/byerp
+  /etc/merp: /etc/byerp
+dataset:
+  - name: rpool/zonedata/wavefront
