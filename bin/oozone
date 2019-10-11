@@ -4,6 +4,7 @@
 require 'optparse'
 require 'pathname'
 require_relative '../lib/oozone/helpers'
+require_relative '../lib/oozone/constants'
 
 command = ARGV.shift
 
@@ -13,6 +14,7 @@ if command == 'commands' || ARGV.empty?
     destroy <zone>...       destroy the given zone(s)
     clone <zone> <file>...  clone <zone> according to <file>
     customize <file>...     apply customization actions to extant zone
+    compile <file>...       turn YAML files into zone files
   EOCMDS
   exit 0
 end
@@ -29,5 +31,5 @@ OptionParser.new do |o|
 end.parse!(into: opts)
 
 LOG = Oozone::Helpers.logger_object(opts)
-Oozone::Helpers.ensure_privs
+Oozone::Helpers.ensure_privs unless UNPRIVILEGED_COMMANDS.include?(command)
 Oozone::Helpers.execute_command(command, ARGV, opts)
