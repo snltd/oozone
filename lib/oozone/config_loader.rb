@@ -20,6 +20,17 @@ module Oozone
       @config = parsed_config
     end
 
+    def write_config
+      LOG.debug("dumping zone config to #{zone_config_file}")
+      File.write(zone_config_file, config)
+    end
+
+    private
+
+    def zone_config_file
+      ZCONF_DIR + @file.basename.to_s.sub(/.yaml/, '.zone')
+    end
+
     def zone_name
       @file.basename.to_s.chomp('.yaml')
     end
@@ -36,14 +47,8 @@ module Oozone
       (config_prelude + parse_input).compact.join("\n") + "\n"
     end
 
-    def write_config
-      zone_config_file = ZCONF_DIR + @file.sub(/.yaml/, '.zone')
-      LOG.debug("dumping zone config to #{zone_config_file}")
-      File.write(zone_config_file, config)
-    end
-
     def parse_input
-      @raw.map { |k, v| respond_to?(k) ? send(k, v) : simple_conv(k, v) }
+      @raw.map { |k, v| respond_to?(k, true) ? send(k, v) : simple_conv(k, v) }
     end
 
     def section(defns, type)
@@ -61,15 +66,20 @@ module Oozone
     end
 
     def dataset(defns)
-      defns.each do |dataset|
-        Oozone::DatasetManager.new(dataset[:name]).create
-      end
-
+      defns.each { |d| create_dataset(d) }
       section(defns, :dataset)
     end
 
+    def create_dataset(dataset)
+      Oozone::DatasetManager.new(dataset[:name]).create
+    end
+
     def simple_conv(key, value)
-      ["set #{key}=#{value}"]
+      if value.is_a?(Array)
+        section(value, key)
+      else
+        ["set #{key}=#{value}"]
+      end
     end
 
     def dns(defns)
