@@ -45,7 +45,7 @@ module Oozone
 
       def leave_existing?(zone)
         if zone.exists? && !@opts[:force]
-          LOG.warn "zone '#{zone_name}' exists. Use -F to recreate"
+          LOG.warn "zone '#{zone.zone}' exists. Use -F to recreate"
           true
         else
           false
