@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'yaml'
 require 'pathname'
 require_relative 'dataset_manager'
 
-module ZoneManager
+module Oozone
   #
   # Convert the YAML input to a zone config file and some metadata for further
   # operations
@@ -10,14 +12,24 @@ module ZoneManager
   class ConfigLoader
     attr_reader :metadata, :config
 
-    def initialize(zone_name)
-      file = "#{zone_name}.yaml"
-      LOG.debug("loading zone configuration from #{file}")
-      @raw = YAML.safe_load(IO.read(file), symbolize_names: true)
-      @file = file
+    def initialize(zone_file)
+      @file = Pathname.new(zone_file)
+      @raw = raw_config(zone_file)
       @metadata = { zone_name: zone_name,
                     root: Pathname.new(@raw[:zonepath]) + 'root' }
       @config = parsed_config
+    end
+
+    def zone_name
+      @file.basename.to_s.chomp('.yaml')
+    end
+
+    def raw_config(zone_file)
+      LOG.debug("loading zone configuration from #{zone_file}")
+      YAML.safe_load(IO.read(zone_file), symbolize_names: true)
+    rescue Errno::ENOENT
+      LOG.error "file not found: #{zone_file}"
+      exit 1
     end
 
     def parsed_config
@@ -25,9 +37,9 @@ module ZoneManager
     end
 
     def write_config
-      config_file = Pathname.new(@file.sub(/.yaml/, '.zone')).realpath
-      LOG.debug("dumping zone config to #{config_file}")
-      File.write(config_file, config)
+      zone_config_file = ZCONF_DIR + @file.sub(/.yaml/, '.zone')
+      LOG.debug("dumping zone config to #{zone_config_file}")
+      File.write(zone_config_file, config)
     end
 
     def parse_input
@@ -50,7 +62,7 @@ module ZoneManager
 
     def dataset(defns)
       defns.each do |dataset|
-        ZoneManager::DatasetManager.new(dataset[:name]).create
+        Oozone::DatasetManager.new(dataset[:name]).create
       end
 
       section(defns, :dataset)

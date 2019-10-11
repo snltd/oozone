@@ -1,4 +1,4 @@
-## ozone
+## oozone
 
 Simple zone management for OmniOS.
 

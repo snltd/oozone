@@ -1,11 +1,16 @@
+# frozen_string_literal: true
+
 require 'open3'
 require 'fileutils'
 
-module ZoneManager
+module Oozone
+  #
+  # Mixin methods for running commands and moving stuff into zones.
+  #
   module Runner
     def run(cmd, return_output = false)
       LOG.debug "RUN: #{cmd}"
-      out, status = Open3::capture2e(cmd)
+      out, status = Open3.capture2e(cmd)
 
       if status.success?
         out if return_output
@@ -16,7 +21,7 @@ module ZoneManager
 
     def run_for_output(cmd)
       LOG.debug "RUNNING (for output): #{cmd}"
-      out, _status = Open3::capture2e(cmd)
+      out, _status = Open3.capture2e(cmd)
       out.strip
     end
 

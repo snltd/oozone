@@ -14,6 +14,8 @@ net:
     'global-nic': auto
     'allowed-address': 192.168.1.39/24
     'defrouter': 192.168.1.1
+dataset:
+  - name: rpool/zonedata/wavefront
 dns:
   domain: localnet
   search: localnet
@@ -31,5 +33,3 @@ run_cmd:
 upload:
   /etc/release: /var/tmp/etc/release
   /etc/passwd: /passwd
-dataset:
-  - name: rpool/zonedata/wavefront

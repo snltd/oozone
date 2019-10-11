@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 require_relative 'runner'
 require_relative 'constants'
 
-# Control a zone: stop it start it, create it etc.
-#
-module ZoneManager
+module Oozone
+  #
+  # Control a zone: stop it start it, create it etc.
+  #
   class Controller
     attr_reader :zone
 
-    include ZoneManager::Runner
+    include Oozone::Runner
 
     def initialize(zone_name)
       @zone = zone_name
@@ -37,7 +40,7 @@ module ZoneManager
 
     def configure
       msg(:configuring)
-      run("#{ZONECFG} -z #{zone} -f #{zone}.zone")
+      run("#{ZONECFG} -z #{zone} -f #{ZCONF_DIR + "#{zone}.zone"}")
     end
 
     def install
@@ -60,14 +63,15 @@ module ZoneManager
     end
 
     def not_exist
-      puts "Zone '#{zone}' is not installed on this system."
+      LOG.info "Zone '#{zone}' does not exit on this system"
     end
 
     def wait_for_readiness
-      LOG.info "Waiting for zone to be ready"
+      LOG.info 'Waiting for zone to be ready'
 
       loop do
         break if ready?
+
         sleep 2
       end
     end

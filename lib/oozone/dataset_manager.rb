@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 require_relative 'runner'
 require_relative 'constants'
 
-# Create a dataset
-#
-module ZoneManager
+module Oozone
+  #
+  # Manage ZFS datasets. These are datasets passed through to the zone, not
+  # the ones on which the zone itself is built.
+  #
   class DatasetManager
-    include ZoneManager::Runner
+    include Oozone::Runner
 
     attr_reader :name
 

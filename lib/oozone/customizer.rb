@@ -1,20 +1,24 @@
+# frozen_string_literal: true
+
 require_relative 'constants'
 require_relative 'runner'
 
-module ZoneManager
+module Oozone
   #
   # Customize an installed zone
   #
-  class Customize
-    attr_reader :meta
+  class Customizer
+    attr_reader :meta, :fact_dir, :fact_file
 
-    include ZoneManager::Runner
+    include Oozone::Runner
 
     # @param zname [String] zone name
     # @param meta [Hash] metadata from
     #
     def initialize(metadata)
       @meta = metadata
+      @fact_dir = meta[:root] + 'etc' + 'facter' + 'facts.d'
+      @fact_file = fact_dir + 'facts.txt'
     end
 
     def customize!
@@ -31,13 +35,22 @@ module ZoneManager
     def add_facts
       return unless meta[:facts] && !meta[:facts].empty?
 
-      fact_dir = meta[:root] + 'etc' + 'facter' + 'facts.d'
-      fact_file = fact_dir + 'facts.txt'
+      mk_fact_dir
+      write_fact_file
+    end
+
+    def write_fact_file
+      LOG.info "writing facts to #{fact_file}"
+      File.write(fact_file, fact_file_content)
+    end
+
+    def mk_fact_dir
       LOG.debug "MKDIR: #{fact_dir}"
       FileUtils.mkdir_p(fact_dir)
-      facts = meta[:facts].map { |k, v| "#{k}=#{v}" }.join("\n")
-      LOG.info "writing facts to #{fact_file}"
-      File.write(fact_file, facts)
+    end
+
+    def fact_file_content
+      meta[:facts].map { |k, v| "#{k}=#{v}" }.join("\n")
     end
 
     def configure_dns
@@ -70,7 +83,6 @@ module ZoneManager
     def install_packages
       zrun(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
     end
-
 
     def upload_files
       meta[:upload].each do |src, dest|

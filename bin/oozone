@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'pathname'
+require_relative '../lib/oozone/helpers'
+
+command = ARGV.shift
+
+if command == 'commands' || ARGV.empty?
+  puts <<~EOCMDS
+    create <file>...        create one or more zones from one or more YAML files
+    destroy <zone>...       destroy the given zone(s)
+    clone <zone> <file>...  clone <zone> according to <file>
+    customize <file>...     apply customization actions to extant zone
+  EOCMDS
+  exit 0
+end
+
+opts = { logfile: STDOUT, loglevel: 'INFO' }
+
+OptionParser.new do |o|
+  o.banner = "Usage: #{Pathname.new(__FILE__).basename} [options] <command> " \
+             "[args]\n\nUse 'commsnds' for a list of commands"
+  o.on('-F', '--force', 'if zone exists, remove and recreate')
+  o.on('-L', '--logfile [STRING]', 'log file (default STDOUT)')
+  o.on('-l', '--loglevel [STRING]', 'log level (default INFO)')
+  o.on('-h', '--help', 'show this information') { abort o.to_s }
+end.parse!(into: opts)
+
+LOG = Oozone::Helpers.logger_object(opts)
+Oozone::Helpers.ensure_privs
+Oozone::Helpers.execute_command(command, ARGV, opts)
