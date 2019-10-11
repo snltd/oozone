@@ -1,5 +1,5 @@
 ---
-brand: pkgsrc
+brand: sparse
 zonepath: /zones/wavefront
 autoboot: true
 fs:
@@ -17,13 +17,19 @@ net:
 dns:
   domain: localnet
   search: localnet
-  resolvers:
+  nameserver:
     - 192.168.1.26
     - 192.168.1.1
+facts:
+  role: wavefront-proxy
+  environment: lab
+packages:
+  - 'ooce/runtime/ruby-26'
 run_cmd:
-  'echo "something" >/etc/release'
+  - '/opt/ooce/bin/gem install puppet -v 5.5.0 --no-document --bindir=/opt/ooce/bin'
+  - '/opt/ooce/bin/puppet agent -t'
 upload:
-  /var/tmp/merp: /var/tmp/byerp
-  /etc/merp: /etc/byerp
+  /etc/release: /var/tmp/etc/release
+  /etc/passwd: /passwd
 dataset:
   - name: rpool/zonedata/wavefront

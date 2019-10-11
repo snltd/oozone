@@ -14,47 +14,68 @@ module ZoneManager
     end
 
     def teardown
+      return not_exist unless exists?
+
       halt if state == 'running'
       uninstall if %w[installed incomplete].include?(state)
       delete if state == 'configured'
     end
 
     def msg(action)
-      puts "#{action.to_s.capitalize} zone '#{zone}'."
+      LOG.info "#{action.to_s.capitalize} '#{zone}' zone"
     end
 
     def delete
       msg(:deleting)
-      pfrun("#{ZONECFG} -z #{zone} delete -F")
+      run("#{ZONECFG} -z #{zone} delete -F")
     end
 
     def uninstall
       msg(:uninstalling)
-      pfrun("#{ZONEADM} -z #{zone} uninstall -F")
+      run("#{ZONEADM} -z #{zone} uninstall -F")
     end
 
     def configure
       msg(:configuring)
-      pfrun("#{ZONECFG} -z #{zone} -f #{zone}.zone")
+      run("#{ZONECFG} -z #{zone} -f #{zone}.zone")
     end
 
     def install
       msg(:installing)
-      pfrun("#{ZONEADM} -z #{zone} install", true)
+      run("#{ZONEADM} -z #{zone} install", true)
     end
 
     def boot
       msg(:booting)
-      pfrun("#{ZONEADM} -z #{zone} boot")
+      run("#{ZONEADM} -z #{zone} boot")
     end
 
     def halt
       msg(:halting)
-      pfrun("#{ZONEADM} -z #{zone} halt")
+      run("#{ZONEADM} -z #{zone} halt")
     end
 
     def exists?
       !state.nil?
+    end
+
+    def not_exist
+      puts "Zone '#{zone}' is not installed on this system."
+    end
+
+    def wait_for_readiness
+      LOG.info "Waiting for zone to be ready"
+
+      loop do
+        break if ready?
+        sleep 2
+      end
+    end
+
+    def ready?
+      run_for_output(
+        "#{SVCS} -z #{zone} -Ho state multi-user-server:default"
+      ) == 'online'
     end
 
     def state
