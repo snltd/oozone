@@ -17,7 +17,6 @@ module Oozone
     end
 
     def teardown
-      Oozone::VnicManager.new(zone).destroy!
       return not_exist unless exists?
 
       halt if state == 'running'

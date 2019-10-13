@@ -3,7 +3,6 @@
 require_relative '../controller'
 require_relative '../config_loader'
 require_relative '../customizer'
-require_relative '../vnic_manager'
 
 module Oozone
   module Command
@@ -36,7 +35,6 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
-        Oozone::VnicManager.new(conf.metadata[:zone_name], conf.raw).setup!
         install_or_clone(zone)
         zone.boot
         zone.wait_for_readiness
