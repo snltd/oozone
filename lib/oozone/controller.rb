@@ -17,6 +17,7 @@ module Oozone
     end
 
     def teardown
+      Oozone::VnicManager.new(zone).destroy!
       return not_exist unless exists?
 
       halt if state == 'running'
@@ -48,6 +49,11 @@ module Oozone
       run("#{ZONEADM} -z #{zone} install", true)
     end
 
+    def clone(src_zone)
+      msg(:cloning)
+      run("#{ZONEADM} -z #{zone} clone #{src_zone}", true)
+    end
+
     def boot
       msg(:booting)
       run("#{ZONEADM} -z #{zone} boot")
@@ -56,6 +62,11 @@ module Oozone
     def halt
       msg(:halting)
       run("#{ZONEADM} -z #{zone} halt")
+    end
+
+    def shutdown
+      msg('shutting down')
+      run("#{ZONEADM} -z #{zone} shutdown")
     end
 
     def exists?
@@ -71,7 +82,15 @@ module Oozone
 
       loop do
         break if ready?
+        sleep 2
+      end
+    end
 
+    def wait_for_state(desired_state)
+      LOG.info "Waiting for zone to be in state '#{desired_state}'"
+
+      loop do
+        break if state == desired_state
         sleep 2
       end
     end

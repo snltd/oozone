@@ -23,11 +23,11 @@ module Oozone
 
     def customize!
       LOG.info "Configuring '#{meta[:zone_name]}' zone"
-      add_facts
-      configure_dns
-      install_packages
-      upload_files
-      run_commands
+      add_facts if meta.key?(:facts)
+      configure_dns if meta.key?(:dns)
+      install_packages if meta.key?(:packages)
+      upload_files if meta.key?(:upload)
+      run_commands if meta.key?(:run_cmd)
     end
 
     private

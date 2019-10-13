@@ -3,6 +3,7 @@
 require_relative '../controller'
 require_relative '../config_loader'
 require_relative '../customizer'
+require_relative '../vnic_manager'
 
 module Oozone
   module Command
@@ -35,13 +36,18 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
-        zone.install
+        Oozone::VnicManager.new(conf.metadata[:zone_name], conf.raw).setup!
+        install_or_clone(zone)
         zone.boot
         zone.wait_for_readiness
         Oozone::Customizer.new(conf.metadata).customize!
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+
+      def install_or_clone(zone)
+        zone.install
+      end
 
       def leave_existing?(zone)
         if zone.exists? && !@opts[:force]

@@ -10,6 +10,7 @@ PKG = '/usr/bin/pkg'
 SVCADM = '/usr/sbin/svcadm'
 SVCS = '/usr/bin/svcs'
 ZCONF_DIR = Pathname.new('/var/tmp').freeze
+DLADM = '/usr/sbin/dladm'
 
 # Commands which shouldn't need any special privileges
 #

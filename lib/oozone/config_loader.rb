@@ -10,13 +10,13 @@ module Oozone
   # operations
   #
   class ConfigLoader
-    attr_reader :metadata, :config
+    attr_reader :metadata, :config, :raw
 
     def initialize(zone_file)
       @file = Pathname.new(zone_file)
       @raw = raw_config(zone_file)
       @metadata = { zone_name: zone_name,
-                    root: Pathname.new(@raw[:zonepath]) + 'root' }
+                    root: Pathname.new(raw[:zonepath]) + 'root' }
       @config = parsed_config
     end
 

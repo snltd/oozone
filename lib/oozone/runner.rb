@@ -8,6 +8,13 @@ module Oozone
   # Mixin methods for running commands and moving stuff into zones.
   #
   module Runner
+
+    # Run a command and dump an error if something goes wrong. Use this for
+    # operations which must succeed.
+    # @param cmd [String] command to run
+    # @param return_output [Bool] whether or not to send back stdout on
+    #   successful completion
+    #
     def run(cmd, return_output = false)
       LOG.debug "RUN: #{cmd}"
       out, status = Open3.capture2e(cmd)
@@ -19,12 +26,17 @@ module Oozone
       end
     end
 
+    # Run a command and pass back the output, whether it succeeds or not.
+    # @param cmd [String] command to run
+    #
     def run_for_output(cmd)
       LOG.debug "RUNNING (for output): #{cmd}"
       out, _status = Open3.capture2e(cmd)
       out.strip
     end
 
+    # Run a command in a zone
+    #
     def zrun(zone, cmd)
       run(format('%<zlogin>s %<zone>s "%<cmd>s"',
                  zlogin: ZLOGIN,
@@ -41,6 +53,8 @@ module Oozone
       exit exit_code
     end
 
+    # Copy a file, making a directory if necessary.
+    #
     def cp(src, dest)
       unless dest.dirname.exist?
         LOG.info "MKDIR: #{dest.dirname}"

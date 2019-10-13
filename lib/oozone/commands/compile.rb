@@ -5,8 +5,8 @@ require_relative 'create'
 module Oozone
   module Command
     #
-    # Customize one or more zones. The zones must already exist, and this
-    # command is not very useful outside of testing Oozone.
+    # Turn a YAML file into a zonecfg file. This command is not very useful
+    # outside of testing Oozone.
     #
     class Compile < Create
       def action_zone(zone_file)
