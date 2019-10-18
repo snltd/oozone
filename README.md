@@ -84,7 +84,10 @@ packages:
 ### Puppet Integration
 
 If you use Puppet, like I do, you can add a `facts` hash. The facts will end
-up in `/etc/factor/facts.d/basic_facts.txt`.
+up in `/etc/factor/facts.d/basic_facts.txt`. If this file is created, `oozone`
+adds in a `zbrand` fact, which I need for my stuff. (So far as I can tell, you
+can't get the *real* brand of a zone from inside it. `pkgsrc`, `sparse`,
+`ipkg` etc all report as `native`.)
 
 ```yaml
 facts:
@@ -131,6 +134,17 @@ oozone create [-F] <file>...
 
 Turn each given file into zones. If a zone exists, it is skipped, unless `-F`
 is given, in which case the zone is destroyed and rebuilt.
+
+### Clone
+
+```
+oozone clone [-F] <zone> <file>...
+```
+
+Creates a zone described in each `<file>`, based on a clone of `<zone>`.
+Normal rules apply: `<zone>` must not be running, and you can only clone the
+same brand. `oozone` doesn't bother catching those kinds of errors, so you'll
+just see the stderr of `zoneadm` or `zonecfg`.
 
 ### Destroy
 
