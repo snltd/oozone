@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 module Oozone
+  #
+  # Proxy class around brand-specific installers
+  #
   class Installer
     attr_reader :brand, :adapter
 

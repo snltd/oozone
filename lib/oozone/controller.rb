@@ -71,6 +71,7 @@ module Oozone
 
       loop do
         break if ready?
+
         sleep 2
       end
     end
@@ -80,6 +81,7 @@ module Oozone
 
       loop do
         break if state == desired_state
+
         sleep 2
       end
     end

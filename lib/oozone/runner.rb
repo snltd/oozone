@@ -8,7 +8,6 @@ module Oozone
   # Mixin methods for running commands and moving stuff into zones.
   #
   module Runner
-
     # Run a command and dump an error if something goes wrong. Use this for
     # operations which must succeed.
     # @param cmd [String] command to run
