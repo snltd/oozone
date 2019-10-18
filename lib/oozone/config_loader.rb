@@ -82,6 +82,11 @@ module Oozone
       end
     end
 
+    def illumos_source(val)
+      @metadata[:illumos_source] = val
+      nil
+    end
+
     def dns(defns)
       @metadata[:dns] = defns
       nil

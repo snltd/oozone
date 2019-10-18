@@ -43,16 +43,6 @@ module Oozone
       run("#{ZONECFG} -z #{zone} -f #{ZCONF_DIR + "#{zone}.zone"}")
     end
 
-    def install
-      msg(:installing)
-      run("#{ZONEADM} -z #{zone} install", true)
-    end
-
-    def clone(src_zone)
-      msg(:cloning)
-      run("#{ZONEADM} -z #{zone} clone #{src_zone}", true)
-    end
-
     def boot
       msg(:booting)
       run("#{ZONEADM} -z #{zone} boot")
@@ -95,9 +85,7 @@ module Oozone
     end
 
     def ready?
-      run_for_output(
-        "#{SVCS} -z #{zone} -Ho state multi-user-server:default"
-      ) == 'online'
+      run_for_output("#{SVCS} -z #{zone} -Ho state #{READY_SVC}") == 'online'
     end
 
     def state

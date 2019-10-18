@@ -3,6 +3,7 @@
 require_relative '../controller'
 require_relative '../config_loader'
 require_relative '../customizer'
+require_relative '../installer'
 
 module Oozone
   module Command
@@ -28,6 +29,7 @@ module Oozone
         conf = Oozone::ConfigLoader.new(zone_file)
         zone_name = conf.metadata[:zone_name]
         zone = Oozone::Controller.new(zone_name)
+        @installer = Oozone::Installer.new(conf).adapter
 
         return if leave_existing?(zone)
 
@@ -35,16 +37,16 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
-        install_or_clone(zone)
+        install_or_clone
         zone.boot
         zone.wait_for_readiness
-        Oozone::Customizer.new(conf.metadata).customize!
+        Oozone::Customizer.new(conf).customize!
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def install_or_clone(zone)
-        zone.install
+      def install_or_clone
+        @installer.install!
       end
 
       def leave_existing?(zone)

@@ -8,15 +8,15 @@ module Oozone
   # Customize an installed zone
   #
   class Customizer
-    attr_reader :meta, :fact_dir, :fact_file
+    attr_reader :meta, :fact_dir, :fact_file, :zone_conf
 
     include Oozone::Runner
 
-    # @param zname [String] zone name
-    # @param meta [Hash] metadata from
+    # @param zone_conf [Oozone::ConfigLoader] configuration of zone
     #
-    def initialize(metadata)
-      @meta = metadata
+    def initialize(zone_conf)
+      @zone_conf = zone_conf
+      @meta = zone_conf.metadata
       @fact_dir = meta[:root] + 'etc' + 'facter' + 'facts.d'
       @fact_file = fact_dir + 'facts.txt'
     end
@@ -50,7 +50,9 @@ module Oozone
     end
 
     def fact_file_content
-      meta[:facts].map { |k, v| "#{k}=#{v}" }.join("\n")
+      { zbrand: zone_conf.raw[:brand] }.merge(meta[:facts]).map do |k, v|
+        "#{k}=#{v}"
+      end.join("\n")
     end
 
     def configure_dns

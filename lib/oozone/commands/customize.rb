@@ -13,7 +13,7 @@ module Oozone
         conf = Oozone::ConfigLoader.new(zone_file)
         zone = Oozone::Controller.new(conf.metadata[:zone_name])
         exists?(zone)
-        Oozone::Customizer.new(conf.metadata).customize!
+        Oozone::Customizer.new(conf).customize!
       end
 
       def exists?(zone)
