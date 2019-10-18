@@ -89,7 +89,12 @@ module Oozone
 
     def dns(defns)
       @metadata[:dns] = defns
-      nil
+      section([{ name: 'dns-domain',
+                 type: :string,
+                 value: defns[:domain] },
+               { name: :resolvers,
+                 type: :string,
+                 value: defns[:nameserver].join(',') }], :attr)
     end
 
     def facts(list)

@@ -21,7 +21,6 @@ class ConfigLoaderTest < MiniTest::Test
     assert_instance_of(Hash, m)
     assert_equal('test_zone_01', m[:zone_name])
     assert_equal({ domain: 'localnet',
-                   search: 'localnet',
                    nameserver: %w[192.168.1.26 192.168.1.1] }, m[:dns])
     assert_equal({ role: 'wavefront-proxy',
                    environment: 'lab' }, m[:facts])

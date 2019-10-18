@@ -23,11 +23,10 @@ module Oozone
 
     def customize!
       LOG.info "Configuring '#{meta[:zone_name]}' zone"
-      add_facts if meta.key?(:facts)
-      configure_dns if meta.key?(:dns)
-      install_packages if meta.key?(:packages)
-      upload_files if meta.key?(:upload)
-      run_commands if meta.key?(:run_cmd)
+      add_facts
+      install_packages
+      upload_files
+      run_commands
     end
 
     private
@@ -55,38 +54,15 @@ module Oozone
       end.join("\n")
     end
 
-    def configure_dns
-      etc = meta[:root] + 'etc'
-      resolv_conf = etc + 'resolv.conf'
-      nsswitch_conf = etc + 'nsswitch.conf'
-
-      LOG.info "Writing DNS config to #{resolv_conf}"
-      File.write(resolv_conf, resolv_conf_content)
-      LOG.info "Writing modified conf to #{nsswitch_conf}"
-      File.write(nsswitch_conf, nsswitch_conf_content(nsswitch_conf))
-    end
-
-    def nsswitch_conf_content(original)
-      IO.read(original).split("\n").map do |l|
-        if l.start_with?('hosts') || l.start_with?('ipnodes')
-          l.sub(/files.*$/, 'files dns mdns')
-        else
-          l
-        end
-      end.join("\n") + "\n"
-    end
-
-    def resolv_conf_content
-      meta[:dns].map do |k, v|
-        v.is_a?(Array) ? v.map { |v1| "#{k} #{v1}" } : "#{k} #{v}"
-      end.join("\n") + "\n"
-    end
-
     def install_packages
+      return unless meta.key?(:packages)
+
       zrun(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
     end
 
     def upload_files
+      return unless meta.key?(:upload)
+
       meta[:upload].each do |src, dest|
         src = Pathname.new(src.to_s)
 
@@ -101,6 +77,8 @@ module Oozone
     end
 
     def run_commands
+      return unless meta.key?(:run_cmd)
+
       meta[:run_cmd].each { |cmd| zrun(meta[:zone_name], cmd) }
     end
   end
