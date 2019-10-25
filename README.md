@@ -27,6 +27,11 @@ net:
     'global-nic': auto
     'allowed-address': 192.168.1.38/24
     'defrouter': 192.168.1.1
+dns:
+  domain: localnet
+  nameserver:
+    - 192.168.1.26
+    - 192.168.1.1
 ```
 
 Compiles to:
@@ -51,6 +56,16 @@ set physical=test0
 set global-nic=auto
 set allowed-address=192.168.1.38/24
 set defrouter=192.168.1.1
+end
+add attr
+set name=dns-domain
+set type=string
+set value=localnet
+end
+add attr
+set name=resolvers
+set type=string
+set value=192.168.1.26,192.168.1.1
 end
 ```
 
