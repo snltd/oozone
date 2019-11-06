@@ -61,8 +61,16 @@ module Oozone
       section(defns, :fs)
     end
 
+    def attr(defns)
+      section(defns, :attr)
+    end
+
     def net(defns)
       section(defns, :net)
+    end
+
+    def device(defns)
+      section(defns, :device)
     end
 
     def dataset(defns)
