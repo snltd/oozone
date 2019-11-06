@@ -57,6 +57,7 @@ module Oozone
     def install_packages
       return unless meta.key?(:packages)
 
+      LOG.info "installing packages: #{meta[:packages].join(', ')}"
       zrun(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
     end
 
@@ -79,7 +80,10 @@ module Oozone
     def run_commands
       return unless meta.key?(:run_cmd)
 
-      meta[:run_cmd].each { |cmd| zrun(meta[:zone_name], cmd) }
+      meta[:run_cmd].each do |cmd|
+        LOG.info "running #{cmd}"
+        zrun(meta[:zone_name], cmd)
+      end
     end
   end
 end
