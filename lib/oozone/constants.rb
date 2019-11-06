@@ -11,6 +11,7 @@ SVCADM = '/usr/sbin/svcadm'
 SVCS = '/usr/bin/svcs'
 ZCONF_DIR = Pathname.new('/var/tmp').freeze
 DLADM = '/usr/sbin/dladm'
+READY_SVC = 'svc:/milestone/multi-user-server:default'
 
 # Commands which shouldn't need any special privileges
 #
