@@ -37,7 +37,7 @@ module Oozone
     # Run a command in a zone
     #
     def zrun(zone, cmd)
-      run(format('%<zlogin>s %<zone>s "%<cmd>s"',
+      run(format('%<zlogin>s %<zone>s %<cmd>s',
                  zlogin: ZLOGIN,
                  zone: zone,
                  cmd: cmd.inspect))
