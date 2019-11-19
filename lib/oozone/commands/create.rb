@@ -4,6 +4,7 @@ require_relative '../controller'
 require_relative '../config_loader'
 require_relative '../customizer'
 require_relative '../installer'
+require_relative '../runner'
 
 module Oozone
   module Command
@@ -11,7 +12,8 @@ module Oozone
     # Create one or more zones.
     #
     class Create
-      #
+      include Oozone::Runner
+
       # The arguments passed in to this command are a list of zone file names
       #
       def initialize(args, opts)
@@ -37,6 +39,7 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
+        flush_puppet_server(zone_name)
         install_or_clone
         zone.boot
         zone.wait_for_readiness
@@ -47,6 +50,18 @@ module Oozone
 
       def install_or_clone
         @installer.install!
+      end
+
+      def fqdn(zone)
+        "#{zone}.localnet"
+      end
+
+      def flush_puppet_server(zone)
+        return unless defined?(PUPPET_SERVER) && @opts[:force]
+
+        LOG.info("Flushing #{fqdn(zone)} on Puppet server")
+        run_for_output("#{SU} '#{SSH} #{PUPPET_SERVER} " \
+                       "pfexec puppet cert clean #{fqdn(zone)}'")
       end
 
       def leave_existing?(zone)

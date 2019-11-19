@@ -12,6 +12,9 @@ SVCS = '/usr/bin/svcs'
 ZCONF_DIR = Pathname.new('/var/tmp').freeze
 DLADM = '/usr/sbin/dladm'
 READY_SVC = 'svc:/milestone/multi-user-server:default'
+SU = '/bin/su rob -c'
+SSH = '/bin/ssh'
+PUPPET_SERVER = 'puppet.localnet' # comment this out to bar calls to it
 
 # Commands which shouldn't need any special privileges
 #
