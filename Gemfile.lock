@@ -6,32 +6,47 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.0)
-    jaro_winkler (1.5.3)
-    minitest (5.12.2)
-    parallel (1.18.0)
-    parser (2.6.5.0)
-      ast (~> 2.4.0)
-    rainbow (3.0.0)
+    ast (2.4.2)
+    minitest (5.15.0)
+    parallel (1.21.0)
+    parser (3.1.1.0)
+      ast (~> 2.4.1)
+    rainbow (3.1.1)
     rake (12.3.3)
-    rubocop (0.74.0)
-      jaro_winkler (~> 1.5.1)
+    regexp_parser (2.2.1)
+    rexml (3.2.5)
+    rubocop (1.25.1)
       parallel (~> 1.10)
-      parser (>= 2.6)
+      parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml
+      rubocop-ast (>= 1.15.1, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 1.7)
-    ruby-progressbar (1.10.1)
-    unicode-display_width (1.6.0)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.16.0)
+      parser (>= 3.1.1.0)
+    rubocop-minitest (0.17.2)
+      rubocop (>= 0.90, < 2.0)
+    rubocop-performance (1.13.2)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
+    ruby-progressbar (1.11.0)
+    unicode-display_width (2.1.0)
 
 PLATFORMS
-  ruby
+  x86_64-solaris-2.11
 
 DEPENDENCIES
-  minitest (~> 5.11, >= 5.11.0)
+  minitest (~> 5.11)
   oozone!
   rake (~> 12.0)
-  rubocop (~> 0.74.0)
+  rubocop (~> 1.0)
+  rubocop-minitest
+  rubocop-performance
+  rubocop-rake
 
 BUNDLED WITH
-   2.0.2
+   2.3.3

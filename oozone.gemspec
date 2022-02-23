@@ -8,7 +8,6 @@ require_relative 'lib/oozone/version'
 Gem::Specification.new do |gem|
   gem.name          = 'oozone'
   gem.version       = OOZONE_VERSION
-  gem.date          = Date.today.to_s
 
   gem.summary       = 'OmniOS zone manager'
   gem.description   = 'Tool to simplify zone create on OmniOS'
@@ -24,9 +23,13 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(/^spec/)
   gem.require_paths = %w[lib]
 
-  gem.add_development_dependency 'minitest', '~> 5.11', '>= 5.11.0'
+  gem.add_development_dependency 'minitest', '~> 5.11'
   gem.add_development_dependency 'rake', '~> 12.0'
-  gem.add_development_dependency 'rubocop', '~> 0.74.0'
+  gem.add_development_dependency 'rubocop', '~> 1.0'
+  gem.add_development_dependency 'rubocop-minitest'
+  gem.add_development_dependency 'rubocop-performance'
+  gem.add_development_dependency 'rubocop-rake'
 
-  gem.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
+  gem.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
+  gem.metadata['rubygems_mfa_required'] = 'true'
 end
