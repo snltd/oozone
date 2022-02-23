@@ -9,7 +9,7 @@ module Oozone
     # zone, a ZFS snapshot, a ZFS datastream, or a tarfile. (Which we don't
     # support because I don't need it.)
     #
-    # We have our users specify the source in the `illumos_src` parameter of
+    # We have our users specify the source in the `illumos_source` parameter of
     # their zone config file.
     #
     class Illumos < Ipkg
