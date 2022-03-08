@@ -10,7 +10,7 @@ module Oozone
     class Clone < Create
       def initialize(args, opts)
         unless args.size >= 2
-          abort 'Supply a zone to clone from and one or more config files'
+          abort 'Supply a zone to clone from, and one or more config files'
         end
 
         @src_zone = args.shift

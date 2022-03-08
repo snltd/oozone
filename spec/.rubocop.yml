@@ -1,13 +1,11 @@
-# Offense count: 64
+inherit_from:
+  - ../.rubocop.yml
+
 Metrics/AbcSize:
   Max: 64
-
-# Offense count: 5
-# Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 300
-
-# Offense count: 46
-# Configuration parameters: CountComments, ExcludedMethods.
+  Max: 400
 Metrics/MethodLength:
   Max: 39
+Naming/VariableNumber:
+  Enabled: false

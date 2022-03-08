@@ -32,6 +32,7 @@ module Oozone
         zone_name = conf.metadata[:zone_name]
         zone = Oozone::Controller.new(zone_name)
         @installer = Oozone::Installer.new(conf).adapter
+        @conf = conf
 
         return if leave_existing?(zone)
 
@@ -57,11 +58,16 @@ module Oozone
       end
 
       def flush_puppet_server(zone)
+        if @conf.metadata[:facts][:role] == 'puppet'
+          puts 'LOOKS LIKE A PUPPET SERVER'
+          return
+        end
+
         return unless defined?(PUPPET_SERVER) && @opts[:force]
 
         LOG.info("Flushing #{fqdn(zone)} on Puppet server")
         run_for_output("#{SU} '#{SSH} #{PUPPET_SERVER} " \
-                       "pfexec puppet cert clean #{fqdn(zone)}'")
+                       "pfexec #{PUPPET_SERVER_BIN} cert clean #{fqdn(zone)}'")
       end
 
       def leave_existing?(zone)

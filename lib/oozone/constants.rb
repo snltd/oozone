@@ -15,6 +15,7 @@ READY_SVC = 'svc:/milestone/multi-user-server:default'
 SU = '/bin/su rob -c'
 SSH = '/bin/ssh'
 PUPPET_SERVER = 'puppet.localnet' # comment this out to bar calls to it
+PUPPET_SERVER_BIN = '/opt/ooce/bin/puppet'
 
 # Commands which shouldn't need any special privileges
 #

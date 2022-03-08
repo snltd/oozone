@@ -55,7 +55,7 @@ module Oozone
     end
 
     def install_packages
-      return unless meta.key?(:packages)
+      return unless meta[:packages]
 
       LOG.info "installing packages: #{meta[:packages].join(', ')}"
       zrun(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
@@ -72,7 +72,7 @@ module Oozone
           next
         end
 
-        zdest = meta[:root] + dest[1..-1]
+        zdest = meta[:root] + dest[1..]
         cp(src, zdest)
       end
     end

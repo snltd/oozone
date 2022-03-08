@@ -37,7 +37,7 @@ module Oozone
 
     def raw_config(zone_file)
       LOG.debug("loading zone configuration from #{zone_file}")
-      YAML.safe_load(IO.read(zone_file), symbolize_names: true)
+      YAML.safe_load(File.read(zone_file), symbolize_names: true)
     rescue Errno::ENOENT
       LOG.error "file not found: #{zone_file}"
       exit 1

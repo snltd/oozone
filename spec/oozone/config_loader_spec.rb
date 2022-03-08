@@ -60,6 +60,6 @@ class ConfigLoaderTest < MiniTest::Test
   private
 
   def contents_of(zone_file)
-    IO.read(RES_DIR + zone_file)
+    File.read(RES_DIR + zone_file)
   end
 end

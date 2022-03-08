@@ -19,7 +19,7 @@ if command == 'commands' || ARGV.empty?
   exit 0
 end
 
-opts = { logfile: STDOUT, loglevel: 'INFO' }
+opts = { logfile: $stdout, loglevel: 'INFO' }
 
 OptionParser.new do |o|
   o.banner = "Usage: #{Pathname.new(__FILE__).basename} [options] <command> " \
