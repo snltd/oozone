@@ -25,6 +25,10 @@ module Oozone
         @args.each { |z| action_zone(z) }
       end
 
+      def using_ansible?(conf)
+        conf.raw.fetch(:configure_with, 'puppet') == 'ansible'
+      end
+
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def action_zone(zone_file)
@@ -40,7 +44,7 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
-        flush_puppet_server(zone_name)
+        flush_puppet_server(zone_name) unless using_ansible?(conf)
         install_or_clone
         zone.boot
         zone.wait_for_readiness
@@ -58,7 +62,7 @@ module Oozone
       end
 
       def flush_puppet_server(zone)
-        if @conf.metadata[:facts][:role] == 'puppet'
+        if @conf.metadata[:facts] && @conf.metadata[:facts][:role] == 'puppet'
           puts 'LOOKS LIKE A PUPPET SERVER'
           return
         end
@@ -67,7 +71,7 @@ module Oozone
 
         LOG.info("Flushing #{fqdn(zone)} on Puppet server")
         run_for_output("#{SU} '#{SSH} #{PUPPET_SERVER} " \
-                       "pfexec #{PUPPET_SERVER_BIN} cert clean #{fqdn(zone)}'")
+                       "#{PUPPET_SERVER_BIN} cert clean #{fqdn(zone)}'")
       end
 
       def leave_existing?(zone)

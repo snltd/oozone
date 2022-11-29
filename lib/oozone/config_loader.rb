@@ -125,6 +125,11 @@ module Oozone
       nil
     end
 
+    def run_ssh(cmds)
+      @metadata[:run_ssh] = cmds
+      nil
+    end
+
     def config_prelude
       ['create -b']
     end

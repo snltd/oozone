@@ -37,10 +37,23 @@ module Oozone
     # Run a command in a zone
     #
     def zrun(zone, cmd)
+      LOG.info "running #{zone}:#{cmd}"
+
       run(format('%<zlogin>s %<zone>s %<cmd>s',
                  zlogin: ZLOGIN,
                  zone: zone,
                  cmd: cmd.inspect))
+    end
+
+    def ssh_run(cmd)
+      c = "/usr/bin/ssh #{cmd[:user]}@#{cmd[:host]} '#{cmd[:cmd]}'"
+      LOG.info "SSH_RUN: #{c}"
+
+      Open3.popen3(c) do |stdin, stdout, stderr|
+        while line = stdout.gets
+          puts "#{cmd[:user]}@#{cmd[:host]}: #{line}"
+        end
+      end
     end
 
     def cope_with_failure(output, exit_code)

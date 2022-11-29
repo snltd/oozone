@@ -27,6 +27,7 @@ module Oozone
       install_packages
       upload_files
       run_commands
+      run_ssh
     end
 
     private
@@ -81,8 +82,15 @@ module Oozone
       return unless meta.key?(:run_cmd)
 
       meta[:run_cmd].each do |cmd|
-        LOG.info "running #{cmd}"
         zrun(meta[:zone_name], cmd)
+      end
+    end
+
+    def run_ssh
+      return unless meta.key?(:run_ssh)
+
+      meta[:run_ssh].each do |cmd|
+        ssh_run(cmd)
       end
     end
   end
