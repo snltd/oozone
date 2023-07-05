@@ -37,6 +37,7 @@ GEM
     unicode-display_width (2.1.0)
 
 PLATFORMS
+  x86_64-linux
   x86_64-solaris-2.11
 
 DEPENDENCIES
