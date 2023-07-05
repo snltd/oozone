@@ -45,7 +45,6 @@ GEM
 
 PLATFORMS
   x86_64-linux
-  x86_64-solaris-2.11
 
 DEPENDENCIES
   minitest (~> 5.17)
@@ -58,4 +57,4 @@ DEPENDENCIES
   rubocop-rake (~> 0.6)
 
 BUNDLED WITH
-   2.4.1
+   2.4.10
