@@ -8,13 +8,14 @@ require_relative '../lib/oozone/constants'
 
 command = ARGV.shift
 
-if command == 'commands' || ARGV.empty?
+if command == 'commands' || (command != 'ls' && ARGV.empty?)
   puts <<~EOCMDS
     create <file>...        create one or more zones from one or more YAML files
     destroy <zone>...       destroy the given zone(s)
     clone <zone> <file>...  clone <zone> according to <file>
     customize <file>...     apply customization actions to extant zone
     compile <file>...       turn YAML files into zone files
+    ls                      list zones, with extra info
   EOCMDS
   exit 0
 end

@@ -17,8 +17,8 @@ module Oozone
     def initialize(zone_conf)
       @zone_conf = zone_conf
       @meta = zone_conf.metadata
-      @fact_dir = meta[:root] + 'etc' + 'facter' + 'facts.d'
-      @fact_file = fact_dir + 'facts.txt'
+      @fact_dir = meta[:root].join('etc', 'ansible', 'facts.d')
+      @fact_file = fact_dir.join('zone.fact')
     end
 
     def customize!
@@ -33,8 +33,6 @@ module Oozone
     private
 
     def add_facts
-      return unless meta[:facts] && !meta[:facts].empty?
-
       mk_fact_dir
       write_fact_file
     end
@@ -50,9 +48,9 @@ module Oozone
     end
 
     def fact_file_content
-      { zbrand: zone_conf.raw[:brand] }.merge(meta[:facts]).map do |k, v|
-        "#{k}=#{v}"
-      end.join("\n")
+      content = ['[general]', "zbrand=#{zone_conf.raw[:brand]}"]
+      meta[:facts].each { |k, v| content << "#{k}=#{v}" } if meta.key?(:facts)
+      content.join("\n")
     end
 
     def install_packages
