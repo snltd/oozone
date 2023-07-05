@@ -44,7 +44,6 @@ module Oozone
         conf.write_config
         zone.teardown
         zone.configure
-        flush_puppet_server(zone_name) unless using_ansible?(conf)
         install_or_clone
         zone.boot
         zone.wait_for_readiness
@@ -59,19 +58,6 @@ module Oozone
 
       def fqdn(zone)
         "#{zone}.localnet"
-      end
-
-      def flush_puppet_server(zone)
-        if @conf.metadata[:facts] && @conf.metadata[:facts][:role] == 'puppet'
-          puts 'LOOKS LIKE A PUPPET SERVER'
-          return
-        end
-
-        return unless defined?(PUPPET_SERVER) && @opts[:force]
-
-        LOG.info("Flushing #{fqdn(zone)} on Puppet server")
-        run_for_output("#{SU} '#{SSH} #{PUPPET_SERVER} " \
-                       "#{PUPPET_SERVER_BIN} cert clean #{fqdn(zone)}'")
       end
 
       def leave_existing?(zone)

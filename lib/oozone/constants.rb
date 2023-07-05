@@ -19,4 +19,4 @@ PUPPET_SERVER_BIN = '/opt/ooce/bin/puppet'
 
 # Commands which shouldn't need any special privileges
 #
-UNPRIVILEGED_COMMANDS = %w[compile].freeze
+UNPRIVILEGED_COMMANDS = %w[compile ls].freeze
