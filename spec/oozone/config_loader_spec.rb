@@ -12,7 +12,7 @@ class ConfigLoaderTest < MiniTest::Test
   end
 
   def test_test
-    assert_equal(RES_DIR.to_s, "/some/path")
+    assert_equal(RES_DIR.to_s, '/some/path')
   end
 
   def _test_01_zone_file_is_created_correctly
