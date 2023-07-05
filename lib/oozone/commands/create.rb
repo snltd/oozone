@@ -29,7 +29,6 @@ module Oozone
         conf.raw.fetch(:configure_with, 'puppet') == 'ansible'
       end
 
-      # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def action_zone(zone_file)
         conf = Oozone::ConfigLoader.new(zone_file)
@@ -49,7 +48,6 @@ module Oozone
         zone.wait_for_readiness
         Oozone::Customizer.new(conf).customize!
       end
-      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       def install_or_clone

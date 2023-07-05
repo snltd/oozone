@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'minitest', '~> 5.17', group: :development
+gem 'mocha', '~> 2.0', group: :development
 gem 'rake', '~> 13.0', group: :development
 gem 'rubocop', '~> 1.51.0', group: :development
 gem 'rubocop-minitest', '~> 0.14', group: :development

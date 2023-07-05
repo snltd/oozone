@@ -1,16 +1,16 @@
 ---
 
+Layout/LineContinuationLeadingSpace:
+  Enabled: false
+
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
   NewCops: enable
 
 require:
+  - rubocop-rake
   - rubocop-minitest
   - rubocop-performance
 
 Layout/LineLength:
   Max: 80
-Style/StringConcatenation:
-  Enabled: false
-Style/OptionalBooleanParameter:
-  Enabled: false

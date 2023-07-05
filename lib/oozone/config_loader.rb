@@ -15,8 +15,8 @@ module Oozone
     def initialize(zone_file)
       @file = Pathname.new(zone_file)
       @raw = raw_config(zone_file)
-      @metadata = { zone_name: zone_name,
-                    root: Pathname.new(raw[:zonepath]) + 'root' }
+      @metadata = { zone_name:,
+                    root: Pathname.new(raw[:zonepath]).join('root') }
       @config = parsed_config
     end
 
@@ -37,14 +37,14 @@ module Oozone
 
     def raw_config(zone_file)
       LOG.debug("loading zone configuration from #{zone_file}")
-      YAML.safe_load(File.read(zone_file), symbolize_names: true)
+      YAML.safe_load_file(zone_file, symbolize_names: true)
     rescue Errno::ENOENT
       LOG.error "file not found: #{zone_file}"
       exit 1
     end
 
     def parsed_config
-      (config_prelude + parse_input).compact.join("\n") + "\n"
+      "#{(config_prelude + parse_input).compact.join("\n")}\n"
     end
 
     def parse_input

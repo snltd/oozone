@@ -17,7 +17,7 @@ module Oozone
       end
 
       def exists?(zone)
-        return if zone.exists?
+        return true if zone.exists?
 
         LOG.error 'zone is not installed'
         exit 3

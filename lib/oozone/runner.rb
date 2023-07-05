@@ -14,7 +14,7 @@ module Oozone
     # @param return_output [Bool] whether or not to send back stdout on
     #   successful completion
     #
-    def run(cmd, return_output = false)
+    def run(cmd, return_output: false)
       LOG.debug "RUN: #{cmd}"
       out, status = Open3.capture2e(cmd)
 
@@ -41,7 +41,7 @@ module Oozone
 
       run(format('%<zlogin>s %<zone>s %<cmd>s',
                  zlogin: ZLOGIN,
-                 zone: zone,
+                 zone:,
                  cmd: cmd.inspect))
     end
 
@@ -49,8 +49,8 @@ module Oozone
       c = "/usr/bin/ssh #{cmd[:user]}@#{cmd[:host]} '#{cmd[:cmd]}'"
       LOG.info "SSH_RUN: #{c}"
 
-      Open3.popen3(c) do |stdin, stdout, stderr|
-        while line = stdout.gets
+      Open3.popen3(c) do |_stdin, stdout, _stderr|
+        while (line = stdout.gets)
           puts "#{cmd[:user]}@#{cmd[:host]}: #{line}"
         end
       end
