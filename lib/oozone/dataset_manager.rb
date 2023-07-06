@@ -11,27 +11,25 @@ module Oozone
   class DatasetManager
     include Oozone::Runner
 
-    attr_reader :name
-
     def initialize(dataset_name)
       @name = dataset_name
     end
 
-    def create
+    def create!
       return if exist?
 
-      LOG.info "Creating '#{name}' dataset"
-      run("#{ZFS} create -o mountpoint=none #{name}")
+      LOG.info "Creating '#{@name}' dataset"
+      execute!("#{ZFS} create -o mountpoint=none #{@name}")
     end
 
     def exist?
-      LOG.info "Checking for '#{name}' dataset"
+      LOG.info "Checking for '#{@name}' dataset"
 
-      if system("#{ZFS} list #{name} >/dev/null 2>&1")
-        LOG.debug "'#{name}' dataset exists"
+      if executes_successfully?("#{ZFS} list #{@name}")
+        LOG.debug "'#{@name}' dataset exists"
         true
       else
-        LOG.debug "'#{name}' dataset does not exist"
+        LOG.debug "'#{@name}' dataset does not exist"
         false
       end
     end

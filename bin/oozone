@@ -31,6 +31,6 @@ OptionParser.new do |o|
   o.on('-h', '--help', 'show this information') { abort o.to_s }
 end.parse!(into: opts)
 
-LOG = Oozone::Helpers.logger_object(opts)
+opts[:logger] = Oozone::Helpers.logger_object(opts)
 Oozone::Helpers.ensure_privs unless UNPRIVILEGED_COMMANDS.include?(command)
 Oozone::Helpers.execute_command(command, ARGV, opts)

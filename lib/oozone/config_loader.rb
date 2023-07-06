@@ -20,7 +20,7 @@ module Oozone
       @config = parsed_config
     end
 
-    def write_config
+    def write!(_target = zone_config_file)
       LOG.debug("dumping zone config to #{zone_config_file}")
       File.write(zone_config_file, config)
     end
@@ -28,7 +28,7 @@ module Oozone
     private
 
     def zone_config_file
-      ZCONF_DIR + @file.basename.to_s.sub(/.yaml/, '.zone')
+      ZCONF_DIR.join(@file.basename.to_s.sub(/.yaml/, '.zone'))
     end
 
     def zone_name
@@ -79,7 +79,7 @@ module Oozone
     end
 
     def create_dataset(dataset)
-      Oozone::DatasetManager.new(dataset[:name]).create
+      Oozone::DatasetManager.new(dataset[:name]).create!
     end
 
     def simple_conv(key, value)
