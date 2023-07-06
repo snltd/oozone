@@ -30,12 +30,46 @@ module Oozone
       run_ssh
     end
 
-    private
-
     def add_facts
       mk_fact_dir
       write_fact_file
     end
+
+    def install_packages
+      return unless meta[:packages]
+
+      LOG.info "installing packages: #{meta[:packages].join(', ')}"
+      zexecute!(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
+    end
+
+    def upload_files
+      return unless meta.key?(:upload)
+
+      meta[:upload].each do |src, dest|
+        src = Pathname.new(src.to_s)
+
+        unless src.exist?
+          LOG.info "#{src} does not exist"
+          next
+        end
+
+        safe_copy!(src, meta[:root].join(dest[1..]))
+      end
+    end
+
+    def run_commands
+      return unless meta.key?(:run_cmd)
+
+      meta[:run_cmd].each { |cmd| zexecute!(meta[:zone_name], cmd) }
+    end
+
+    def run_ssh
+      return unless meta.key?(:run_ssh)
+
+      meta[:run_ssh].each { |cmd| ssh_execute!(cmd) }
+    end
+
+    private
 
     def write_fact_file
       LOG.info "writing facts to #{fact_file}"
@@ -51,45 +85,6 @@ module Oozone
       content = ['[general]', "zbrand=#{zone_conf.raw[:brand]}"]
       meta[:facts].each { |k, v| content << "#{k}=#{v}" } if meta.key?(:facts)
       content.join("\n")
-    end
-
-    def install_packages
-      return unless meta[:packages]
-
-      LOG.info "installing packages: #{meta[:packages].join(', ')}"
-      zrun(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")
-    end
-
-    def upload_files
-      return unless meta.key?(:upload)
-
-      meta[:upload].each do |src, dest|
-        src = Pathname.new(src.to_s)
-
-        unless src.exist?
-          puts "#{src} does not exist"
-          next
-        end
-
-        zdest = meta[:root] + dest[1..]
-        cp(src, zdest)
-      end
-    end
-
-    def run_commands
-      return unless meta.key?(:run_cmd)
-
-      meta[:run_cmd].each do |cmd|
-        zrun(meta[:zone_name], cmd)
-      end
-    end
-
-    def run_ssh
-      return unless meta.key?(:run_ssh)
-
-      meta[:run_ssh].each do |cmd|
-        ssh_run(cmd)
-      end
     end
   end
 end
