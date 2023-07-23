@@ -12,7 +12,7 @@ module Oozone
       def action_zone(zone_file)
         conf = Oozone::ConfigLoader.new(zone_file)
         LOG.info "dumping zone file to #{ZCONF_DIR}"
-        conf.write_config
+        conf.write!
       end
     end
   end

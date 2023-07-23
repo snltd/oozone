@@ -1,0 +1,13 @@
+0:global:running:/::ipkg:shared:0
+1:serv-backup:running:/zones/serv-backup:8239e472-b341-45c4-d5ea-e2b4bcea4cf6:lipkg:excl:40
+2:serv-build:running:/zones/serv-build:c7a1cc70-e75c-6af7-ae03-be2c2f4d7cb7:lipkg:excl:72
+3:serv-cron:running:/zones/serv-cron:5c41bacf-f35a-6629-c688-8f5b27197adc:lipkg:excl:42
+4:serv-ws:running:/zones/serv-ws:f56c0dd9-d8d0-44ab-c929-c7aab6df767c:lipkg:excl:74
+5:serv-wf:running:/zones/serv-wf:3e10edd8-61ed-c259-c454-a168cc95d697:lipkg:excl:75
+6:serv-mariadb:running:/zones/serv-mariadb:a116e13b-ab0f-4082-cf93-d3b52ac7df5d:lipkg:excl:45
+7:test-zone:running:/zones/test-zone:59ba61b9-586d-eae4-f28f-90477cf7cdbf:lipkg:excl:53
+8:serv-pkg:running:/zones/serv-pkg:2b7804f3-726a-cad8-afb3-f8492fe91c42:lipkg:excl:71
+9:serv-dns:running:/zones/serv-dns:0758529b-7977-cd11-d4e7-e9672dca275a:lipkg:excl:43
+10:serv-fs:running:/zones/serv-fs:da8309d0-fcf9-efca-a643-81e0b7799656:lipkg:excl:44
+-:gold-lipkg-b:installed:/zones/gold-lipkg-b:16cdefe0-8c20-6b4c-c53d-d1ea32eb3d1b:lipkg:excl:39
+

@@ -1,0 +1,29 @@
+---
+brand: native
+zonepath: /tmp/oozone/zones/test02
+autoboot: false
+net:
+  - physical: test0
+    global-nic: auto
+    allowed-address: 1.2.3.4/32
+    defrouter: 1.2.3.1
+cpu-shares: 5
+capped-memory:
+  - physical: 50m
+    swap: 100m
+rctl:
+  - name: zone.cpu-cap
+    value: priv=privileged,limit=300,action=none
+packages:
+  - vim
+  - zsh
+upload:
+  'src/no_such_file': '/dest/whatever'
+  '../resources/files/test_file': '/dest/file'
+run_cmd:
+  - '/usr/bin/true'
+  - '/usr/bin/false'
+run_ssh:
+  - host: 1.2.3.4
+    user: tester
+    cmd: '/bin/true'

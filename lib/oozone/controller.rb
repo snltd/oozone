@@ -30,32 +30,32 @@ module Oozone
 
     def delete
       msg(:deleting)
-      run("#{ZONECFG} -z #{zone} delete -F")
+      zonecfg('delete -F')
     end
 
     def uninstall
       msg(:uninstalling)
-      run("#{ZONEADM} -z #{zone} uninstall -F")
+      zoneadm('uninstall -F')
     end
 
     def configure
       msg(:configuring)
-      run("#{ZONECFG} -z #{zone} -f #{ZCONF_DIR + "#{zone}.zone"}")
+      zonecfg("-f #{ZCONF_DIR.join("#{zone}.zone")}")
     end
 
     def boot
       msg(:booting)
-      run("#{ZONEADM} -z #{zone} boot")
+      zoneadm('boot')
     end
 
     def halt
       msg(:halting)
-      run("#{ZONEADM} -z #{zone} halt")
+      zoneadm('halt')
     end
 
     def shutdown
       msg('shutting down')
-      run("#{ZONEADM} -z #{zone} shutdown")
+      zoneadm('shutdown')
     end
 
     def exists?
@@ -87,16 +87,35 @@ module Oozone
     end
 
     def ready?
-      run_for_output("#{SVCS} -z #{zone} -Ho state #{READY_SVC}") == 'online'
+      execute_for_output!(
+        "#{SVCS} -z #{zone} -Ho state #{READY_SVC}"
+      ) == 'online'
     end
 
+    # @return [String, Nil] maybe shouldn't be nil?
+    #
     def state
-      run("#{ZONEADM} list -cp", true).each_line do |l|
+      zone_list.each_line do |l|
         chunks = l.split(':')
+
         return chunks[2] if chunks[1] == zone
       end
 
       nil
+    end
+
+    def zone_list
+      execute!("#{ZONEADM} list -cp", return_output: true)
+    end
+
+    private
+
+    def zonecfg(cmd)
+      execute!("#{ZONECFG} -z #{zone} #{cmd}")
+    end
+
+    def zoneadm(cmd)
+      execute!("#{ZONEADM} -z #{zone} #{cmd}")
     end
   end
 end

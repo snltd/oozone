@@ -15,12 +15,12 @@ module Oozone
     def initialize(zone_file)
       @file = Pathname.new(zone_file)
       @raw = raw_config(zone_file)
-      @metadata = { zone_name: zone_name,
-                    root: Pathname.new(raw[:zonepath]) + 'root' }
+      @metadata = { zone_name:,
+                    root: Pathname.new(raw[:zonepath]).join('root') }
       @config = parsed_config
     end
 
-    def write_config
+    def write!(_target = zone_config_file)
       LOG.debug("dumping zone config to #{zone_config_file}")
       File.write(zone_config_file, config)
     end
@@ -28,7 +28,7 @@ module Oozone
     private
 
     def zone_config_file
-      ZCONF_DIR + @file.basename.to_s.sub(/.yaml/, '.zone')
+      ZCONF_DIR.join(@file.basename.to_s.sub(/.yaml/, '.zone'))
     end
 
     def zone_name
@@ -37,14 +37,14 @@ module Oozone
 
     def raw_config(zone_file)
       LOG.debug("loading zone configuration from #{zone_file}")
-      YAML.safe_load(File.read(zone_file), symbolize_names: true)
+      YAML.safe_load_file(zone_file, symbolize_names: true)
     rescue Errno::ENOENT
       LOG.error "file not found: #{zone_file}"
       exit 1
     end
 
     def parsed_config
-      (config_prelude + parse_input).compact.join("\n") + "\n"
+      "#{(config_prelude + parse_input).compact.join("\n")}\n"
     end
 
     def parse_input
@@ -79,7 +79,7 @@ module Oozone
     end
 
     def create_dataset(dataset)
-      Oozone::DatasetManager.new(dataset[:name]).create
+      Oozone::DatasetManager.new(dataset[:name]).create!
     end
 
     def simple_conv(key, value)

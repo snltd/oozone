@@ -1,0 +1,19 @@
+create -b
+set brand=native
+set zonepath=/zones/test02
+set autoboot=false
+add net
+set physical=test0
+set global-nic=auto
+set allowed-address=192.168.1.39/24
+set defrouter=192.168.1.1
+end
+set cpu-shares=5
+add capped-memory
+set physical=50m
+set swap=100m
+end
+add rctl
+set name=zone.cpu-cap
+set value=priv=privileged,limit=300,action=none
+end
