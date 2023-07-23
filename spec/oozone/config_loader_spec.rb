@@ -50,14 +50,15 @@ class ConfigLoaderTest < MiniTest::Test
     refute m.key?(:upload)
   end
 
+  # FIXME
   def _test_write!
-    File.stubs(:write)
+    File.stub(:write)
         .with(Pathname.new('/var/tmp/test_zone_01.zone'),
               contents_of('test_zone_01.zone'))
         .returns(true)
 
     assert Oozone::ConfigLoader.new(
       RES_DIR.join('test_zone_01.yaml')
-    ).write_config
+    ).write!
   end
 end

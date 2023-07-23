@@ -15,7 +15,7 @@ module Oozone
       end
 
       def run!
-        run("#{ZONEADM} list -cp", true).each_line do |l|
+        execute_for_output!("#{ZONEADM} list -cp").each_line do |l|
           _id, name, state, root_dir, _uuid, _brand, _ip, _n = l.split(':')
 
           puts format('%-20<name>s %-12<state>s %-20<source>s',
@@ -28,7 +28,7 @@ module Oozone
       private
 
       def root_dataset(root_dir)
-        m = run_for_output("/bin/df #{root_dir}").match(/.*\((.*)\).*/)
+        m = execute_for_output!("/bin/df #{root_dir}").match(/.*\((.*)\).*/)
         m[1]
       end
     end

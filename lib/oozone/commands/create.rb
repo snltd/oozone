@@ -40,7 +40,7 @@ module Oozone
         return if leave_existing?(zone)
 
         LOG.info "creating zone '#{zone_name}'"
-        conf.write_config
+        conf.write!
         zone.teardown
         zone.configure
         install_or_clone

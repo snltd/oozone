@@ -87,7 +87,9 @@ module Oozone
     end
 
     def ready?
-      run_for_output("#{SVCS} -z #{zone} -Ho state #{READY_SVC}") == 'online'
+      execute_for_output!(
+        "#{SVCS} -z #{zone} -Ho state #{READY_SVC}"
+      ) == 'online'
     end
 
     # @return [String, Nil] maybe shouldn't be nil?

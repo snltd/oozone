@@ -22,6 +22,8 @@ end
 
 opts = { logfile: $stdout, loglevel: 'INFO' }
 
+LOG = Oozone::Helpers.logger_object(opts)
+
 OptionParser.new do |o|
   o.banner = "Usage: #{Pathname.new(__FILE__).basename} [options] <command> " \
              "[args]\n\nUse 'commsnds' for a list of commands"
