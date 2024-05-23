@@ -19,21 +19,13 @@ module Oozone
       end
 
       def install!
-        install_message
-        run("#{ZONEADM} -z #{zone} install", true)
+        LOG.info "Installing '#{zone}' #{brand} zone"
+        execute!("#{ZONEADM} -z #{zone} install", return_output: true)
       end
 
       def clone!(src_zone)
-        clone_message(src_zone)
-        run("#{ZONEADM} -z #{zone} clone #{src_zone}", true)
-      end
-
-      def install_message
-        LOG.info "Installing '#{zone}' #{brand} zone"
-      end
-
-      def clone_message(src_zone)
         LOG.info "Cloning '#{zone}' #{brand} zone from '#{src_zone}'"
+        execute!("#{ZONEADM} -z #{zone} clone #{src_zone}", return_output: true)
       end
     end
   end

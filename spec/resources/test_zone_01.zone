@@ -1,0 +1,33 @@
+create -b
+set brand=sparse
+set zonepath=/zones/wavefront
+set autoboot=true
+add fs
+set dir=/home
+set special=/home
+set type=lofs
+end
+add fs
+set dir=/storage
+set special=/storage
+set type=lofs
+end
+add net
+set physical=test0
+set global-nic=auto
+set allowed-address=192.168.1.39/24
+set defrouter=192.168.1.1
+end
+add dataset
+set name=rpool/zonedata/wavefront
+end
+add attr
+set name=dns-domain
+set type=string
+set value=localnet
+end
+add attr
+set name=resolvers
+set type=string
+set value=192.168.1.26,192.168.1.1
+end

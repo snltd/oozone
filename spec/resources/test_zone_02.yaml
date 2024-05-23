@@ -1,0 +1,16 @@
+---
+brand: native
+zonepath: /zones/test02
+autoboot: false
+net:
+  - physical: test0
+    global-nic: auto
+    allowed-address: 192.168.1.39/24
+    defrouter: 192.168.1.1
+cpu-shares: 5
+capped-memory:
+  - physical: 50m
+    swap: 100m
+rctl:
+  - name: zone.cpu-cap
+    value: priv=privileged,limit=300,action=none
