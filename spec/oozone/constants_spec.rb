@@ -5,5 +5,5 @@ require 'minitest/autorun'
 
 # Tests
 #
-class Test < MiniTest::Test
+class Test < Minitest::Test
 end

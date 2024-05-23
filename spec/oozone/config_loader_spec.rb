@@ -6,7 +6,7 @@ require_relative '../../lib/oozone/config_loader'
 
 # Test the config loader via its public interface.
 #
-class ConfigLoaderTest < MiniTest::Test
+class ConfigLoaderTest < Minitest::Test
   def setup
     spy = Spy.on_instance_method(Oozone::ConfigLoader, :create_dataset)
     @t1 = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_01.yaml'))

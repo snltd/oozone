@@ -8,7 +8,7 @@ require_relative '../../lib/oozone/config_loader'
 
 # Test the customizer class
 #
-class TestCustomizer < MiniTest::Test
+class TestCustomizer < Minitest::Test
   def setup
     conf = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_03.yaml'))
     @t = Oozone::Customizer.new(conf)

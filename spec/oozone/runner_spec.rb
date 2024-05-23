@@ -8,7 +8,7 @@ require_relative '../../lib/oozone/runner'
 
 # Test runner methods
 #
-class TestRunner < MiniTest::Test
+class TestRunner < Minitest::Test
   include Oozone::Runner
 
   def test_execute!

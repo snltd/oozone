@@ -9,7 +9,7 @@ DummyConf = Struct.new(:raw)
 
 # Test installer class
 #
-class TestInstaller < MiniTest::Test
+class TestInstaller < Minitest::Test
   def test_initialize_bad
     assert_output(nil,
                   "'no-such-brand' zones are not supported by Oozone.\n") do

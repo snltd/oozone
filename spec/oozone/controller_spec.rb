@@ -6,7 +6,7 @@ require_relative '../../lib/oozone/controller'
 
 # Test the controller
 #
-class TestController < MiniTest::Test
+class TestController < Minitest::Test
   def setup
     @t = Oozone::Controller.new('test-zone')
     @execute = Spy.on(@t, :execute!)

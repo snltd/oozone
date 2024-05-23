@@ -7,7 +7,7 @@ require_relative '../../lib/oozone/dataset_manager'
 # Test the ZFS dataset manager. Assumes you don't have a 'tester' pool with a
 # 'test-zone' dataset.
 #
-class TestDatasetManager < MiniTest::Test
+class TestDatasetManager < Minitest::Test
   def setup
     @t = Oozone::DatasetManager.new('tester/test-zone')
   end

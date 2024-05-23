@@ -7,7 +7,7 @@ require_relative '../../../lib/oozone/brand_installers/ipkg'
 
 # Tests
 #
-class TestBrandInstallerIpkg < MiniTest::Test
+class TestBrandInstallerIpkg < Minitest::Test
   def setup
     conf = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_03.yaml'))
     @t = Oozone::BrandInstaller::Ipkg.new(conf)
