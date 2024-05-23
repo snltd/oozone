@@ -36,15 +36,16 @@ class TestRunner < Minitest::Test
   def test_execute_for_output!
     assert_equal('string', execute_for_output!('/bin/echo string'))
     assert_raises(Errno::ENOENT) { execute_for_output!('/no/such/command') }
-    assert_equal('/no/such/dir: No such file or directory',
+    assert_match(/No such file or directory/,
                  execute_for_output!('/bin/ls /no/such/dir'))
   end
 
   def test_zexecute!
+    skip unless ZLOGIN.exist?
     execute = Spy.on(self, :execute!)
     zexecute!('/bin/true', 'test-zone')
     assert_equal(1, execute.calls.count)
-    assert_equal(['/usr/sbin/zlogin /bin/true "test-zone"'],
+    assert_equal(["#{ZLOGIN} /bin/true \"test-zone\""],
                  execute.calls.first.args)
     execute.unhook
 
