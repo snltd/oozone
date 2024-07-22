@@ -47,8 +47,10 @@ class TestCustomizer < Minitest::Test
 
     @t.run_ssh
     assert_equal(1, popen.calls.count)
-    assert_equal(["/usr/bin/ssh tester@1.2.3.4 '/bin/true'"],
-                 popen.calls.first.args)
+    assert_equal(
+      ["/bin/ssh -o StrictHostKeyChecking=no tester@1.2.3.4 '/bin/true'"],
+      popen.calls.first.args
+    )
   end
 
   private

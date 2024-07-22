@@ -77,8 +77,10 @@ class TestRunner < Minitest::Test
     ssh_execute!(input)
 
     assert_equal(1, popen.calls.count)
-    assert_equal(["/usr/bin/ssh tester@testhost 'testcmd'"],
-                 popen.calls.first.args)
+    assert_equal(
+      ["/bin/ssh -o StrictHostKeyChecking=no tester@testhost 'testcmd'"],
+      popen.calls.first.args
+    )
     popen.unhook
   end
 
