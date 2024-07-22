@@ -63,7 +63,7 @@ module Oozone
     # @return nil
     #
     def ssh_execute!(cmd)
-      c = "/usr/bin/ssh #{cmd[:user]}@#{cmd[:host]} '#{cmd[:cmd]}'"
+      c = "#{SSH} #{cmd[:user]}@#{cmd[:host]} '#{cmd[:cmd]}'"
       LOG.info "SSH_RUN: #{c}"
 
       Open3.popen3(c) do |_stdin, stdout, _stderr|

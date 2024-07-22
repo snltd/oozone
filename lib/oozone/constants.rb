@@ -11,7 +11,7 @@ SVCADM = Pathname.new('/usr/sbin/svcadm')
 SVCS = Pathname.new('/usr/bin/svcs')
 ZCONF_DIR = Pathname.new('/var/tmp').freeze
 DLADM = Pathname.new('/usr/sbin/dladm')
-SSH = Pathname.new('/bin/ssh')
+SSH = '/bin/ssh -o StrictHostKeyChecking=no'
 PUPPET_SERVER = 'puppet@puppet.localnet' # comment this out to bar calls to it
 PUPPET_SERVER_BIN = Pathname.new('/opt/ooce/bin/puppet')
 READY_SVC = 'svc:/milestone/multi-user-server:default'

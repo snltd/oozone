@@ -18,18 +18,31 @@ module Oozone
         execute_for_output!("#{ZONEADM} list -cp").each_line do |l|
           _id, name, state, root_dir, _uuid, _brand, _ip, _n = l.split(':')
 
-          puts format('%-20<name>s %-12<state>s %-20<source>s',
+          puts format('%-20<name>s %-12<state>s %-20<origin>s',
                       name:,
                       state:,
-                      source: root_dataset(root_dir))
+                      origin: origin(root_dir))
         end
       end
 
       private
 
       def root_dataset(root_dir)
-        m = execute_for_output!("/bin/df #{root_dir}").match(/.*\((.*)\).*/)
+        m = `/bin/df #{root_dir}"`.match(/.*\((.*)\).*/)
         m[1]
+      rescue StandardError
+        nil
+      end
+
+      def origin(root_dir)
+        root_ds = root_dataset(root_dir)
+        zbe_ds = File.join(root_ds, 'ROOT', 'zbe')
+        origin = `#{ZFS} get -Ho value origin #{zbe_ds}`
+        chunks = origin.split('/')
+        root_idx = chunks.index('ROOT')
+        chunks[root_idx - 1]
+      rescue StandardError
+        '-'
       end
     end
   end
