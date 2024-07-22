@@ -9,6 +9,7 @@ module Oozone
   # Convert the YAML input to a zone config file and some metadata for further
   # operations
   #
+  # rubocop:disable Metrics/ClassLength
   class ConfigLoader
     attr_reader :metadata, :config, :raw
 
@@ -130,8 +131,20 @@ module Oozone
       nil
     end
 
+    # Used to specify a bhyve volume
+    def volume_size(defns)
+      @metadata[:volume_size] = defns
+      nil
+    end
+
+    def raw_image(defns)
+      @metadata[:raw_image] = defns
+      nil
+    end
+
     def config_prelude
       ['create -b']
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

@@ -17,6 +17,8 @@ PUPPET_SERVER_BIN = Pathname.new('/opt/ooce/bin/puppet')
 READY_SVC = 'svc:/milestone/multi-user-server:default'
 SU = '/bin/su rob -c'
 
+VOLUME_ROOT_DS = 'rpool/zones/bhyve'
+
 # Commands which shouldn't need any special privileges
 #
 UNPRIVILEGED_COMMANDS = %w[compile ls].freeze
