@@ -9,6 +9,7 @@ module Oozone
   # Convert the YAML input to a zone config file and some metadata for further
   # operations
   #
+  # rubocop:disable Metrics/ClassLength
   class ConfigLoader
     attr_reader :metadata, :config, :raw
 
@@ -145,4 +146,5 @@ module Oozone
       ['create -b']
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
