@@ -7,19 +7,17 @@ require_relative '../../lib/oozone/config_loader'
 # Test the config loader via its public interface.
 #
 class ConfigLoaderTest < Minitest::Test
-  def setup
+  def test_01_zone_file_is_created_correctly
     spy = Spy.on_instance_method(Oozone::ConfigLoader, :create_dataset)
-    @t1 = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_01.yaml'))
-    @t2 = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_02.yaml'))
+    sut = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_01.yaml'))
+    assert_equal(contents_of('test_zone_01.zone'), sut.config)
     spy.unhook
   end
 
-  def test_01_zone_file_is_created_correctly
-    assert_equal(contents_of('test_zone_01.zone'), @t1.config)
-  end
-
   def test_01_metadata
-    m = @t1.metadata
+    spy = Spy.on_instance_method(Oozone::ConfigLoader, :create_dataset)
+    sut = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_01.yaml'))
+    m = sut.metadata
     assert_instance_of(Hash, m)
     assert_equal('test_zone_01', m[:zone_name])
     assert_equal({ domain: 'localnet',
@@ -32,14 +30,17 @@ class ConfigLoaderTest < Minitest::Test
     assert_equal({ '/etc/release': '/var/tmp/etc/release',
                    '/etc/passwd': '/passwd' }, m[:upload])
     assert_equal(Pathname.new('/zones/wavefront/root'), m[:root])
+    spy.unhook
   end
 
   def test_02_zone_file_is_created_correctly
-    assert_equal(contents_of('test_zone_02.zone'), @t2.config)
+    sut = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_02.yaml'))
+    assert_equal(contents_of('test_zone_02.zone'), sut.config)
   end
 
   def test_02_metadata
-    m = @t2.metadata
+    sut = Oozone::ConfigLoader.new(RES_DIR.join('test_zone_02.yaml'))
+    m = sut.metadata
     assert_instance_of(Hash, m)
     assert_equal('test_zone_02', m[:zone_name])
     assert_equal(Pathname.new('/zones/test02/root'), m[:root])
@@ -48,6 +49,11 @@ class ConfigLoaderTest < Minitest::Test
     refute m.key?(:packages)
     refute m.key?(:run_cmd)
     refute m.key?(:upload)
+  end
+
+  def test_bhyve_zone_file_is_created_correctly
+    sut = Oozone::ConfigLoader.new(RES_DIR.join('test-bhyve.yaml'))
+    assert_equal(sut.config, contents_of('test-bhyve.zone'))
   end
 
   # FIXME
