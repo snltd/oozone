@@ -130,6 +130,17 @@ module Oozone
       nil
     end
 
+    # Used to specify a bhyve volume
+    def volume_size(defns)
+      @metadata[:volume_size] = defns
+      nil
+    end
+
+    def raw_image(defns)
+      @metadata[:raw_image] = defns
+      nil
+    end
+
     def config_prelude
       ['create -b']
     end
