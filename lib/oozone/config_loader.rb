@@ -3,6 +3,7 @@
 require 'yaml'
 require 'pathname'
 require_relative 'dataset_manager'
+require_relative 'constants'
 
 module Oozone
   #
@@ -16,8 +17,12 @@ module Oozone
     def initialize(zone_file)
       @file = Pathname.new(zone_file)
       @raw = raw_config(zone_file)
-      @metadata = { zone_name:,
-                    root: Pathname.new(raw[:zonepath]).join('root') }
+      @metadata = {
+        zone_name:,
+        root: Pathname.new(raw[:zonepath]).join('root'),
+        cloudinit_iso_file:
+          Pathname.new("/tmp/cloudinit_cdrom-#{zone_name}.iso")
+      }
       @config = parsed_config
     end
 
@@ -27,6 +32,14 @@ module Oozone
     end
 
     private
+
+    def decorator_class
+      "Oozone::ConfigDecorator::#{@raw[:brand].capitalize}"
+    end
+
+    def decorator_class_path
+      File.join('brand_config_decorators', @raw[:brand])
+    end
 
     def zone_config_file
       ZCONF_DIR.join(@file.basename.to_s.sub(/.yaml/, '.zone'))
@@ -44,11 +57,26 @@ module Oozone
       exit 1
     end
 
-    def parsed_config
-      "#{(config_prelude + parse_input).compact.join("\n")}\n"
+    def load_decorator
+      require_relative decorator_class_path
+      Object.const_get(decorator_class)
+    rescue LoadError
+      nil
     end
 
-    def parse_input
+    def decorated_input(parsed_input)
+      decorator = load_decorator
+
+      return parsed_input if decorator.nil?
+
+      decorator.new(parsed_input, @metadata).decorate!
+    end
+
+    def parsed_config
+      "#{(config_prelude + decorated_input(parsed_input)).compact.join("\n")}\n"
+    end
+
+    def parsed_input
       @raw.map { |k, v| respond_to?(k, true) ? send(k, v) : simple_conv(k, v) }
     end
 
@@ -128,6 +156,11 @@ module Oozone
 
     def run_ssh(cmds)
       @metadata[:run_ssh] = cmds
+      nil
+    end
+
+    def cloudinit(defns)
+      @metadata[:cloudinit] = defns
       nil
     end
 

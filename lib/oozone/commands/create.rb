@@ -30,6 +30,7 @@ module Oozone
       end
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def action_zone(zone_file)
         conf = Oozone::ConfigLoader.new(zone_file)
         zone_name = conf.metadata[:zone_name]
@@ -45,10 +46,20 @@ module Oozone
         zone.configure
         install_or_clone
         zone.boot
-        zone.wait_for_readiness
+        wait_for_readiness(zone, conf.raw[:brand])
+
         Oozone::Customizer.new(conf).customize!
       end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+
+      def wait_for_readiness(zone, brand)
+        if brand == 'bhyve'
+          zone.wait_for_readiness_console
+        else
+          zone.wait_for_readiness
+        end
+      end
 
       def install_or_clone
         @installer.install!

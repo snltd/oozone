@@ -1,0 +1,12 @@
+#cloud-config
+hostname: <%= zone %>
+users:
+  - name: ansible
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users
+    home: /home/ansible
+    shell: /bin/bash
+    lock_passwd: false
+    passwd: $encrypted000password000
+    ssh_authorized_keys:
+      - ssh-rsa l0tsOfcRypT05tufftHAtM4kesAk3y user@hostname

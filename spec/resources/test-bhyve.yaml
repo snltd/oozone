@@ -1,0 +1,17 @@
+---
+brand: bhyve
+zonepath: /zones/test-bhyve
+autoboot: true
+cloudinit: true
+net:
+  - physical: bhyve_net0
+    global-nic: e1000g0
+    allowed-address: 192.168.1.80/24
+    defrouter: 192.168.1.1
+dns:
+  domain: localnet
+  nameserver:
+    - 192.168.1.26
+    - 192.168.1.1
+volume_size: 30G
+raw_image: /home/rob/work/noble-server-cloudimg-amd64.img.raw
