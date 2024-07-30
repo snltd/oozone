@@ -10,12 +10,11 @@ require_relative '../../../lib/oozone/brand_installers/bhyve'
 class TestBrandInstallerBhyve < Minitest::Test
   TEST_ISO_DIR = Pathname.new('/tmp/test-iso-build-dir').freeze
   TEST_RENDER = Pathname.new('/tmp/test-render').freeze
+  TEST_ISO_FILE = Pathname.new('/tmp/test-cloudinit.iso')
 
   def setup
     conf = Oozone::ConfigLoader.new(RES_DIR.join('test-bhyve.yaml'))
     @t = Oozone::BrandInstaller::Bhyve.new(conf)
-    # @execute = Spy.on(@t, :execute!)
-    # @ci_dir = Pathname.new('/tmp').join('test-bhyve')
     FileUtils.rm(TEST_RENDER) if TEST_RENDER.exist?
   end
 
@@ -55,27 +54,37 @@ class TestBrandInstallerBhyve < Minitest::Test
     refute TEST_ISO_DIR.exist?
 
     @t.create_cloudinit_img_dir(
-      'test-bhyve', 
       RES_DIR.join('cloud-init', 'common'),
-      TEST_ISO_DIR, 
+      TEST_ISO_DIR
     )
 
     assert TEST_ISO_DIR.exist?
+
+    TEST_ISO_DIR.children.each do |f|
+      assert_equal(
+        File.read(RES_DIR.join('cloud-init', 'rendered', f)),
+        File.read(f)
+      )
+    end
     FileUtils.rm_r(TEST_ISO_DIR)
   end
 
-  def test_render_cloudinit_template
-    %w[meta-data network-config user-data].each do |f|
-      @t.render_cloudinit_template(
-        RES_DIR.join('cloud-init', 'common', f),
-        TEST_RENDER
-      )
+  def test_create_cloudinit_iso_from_dir!
+    skip unless MKISOFS.exist?
 
-      assert_equal(
-        File.read(RES_DIR.join('cloud-init', 'rendered', f)),
-        File.read(TEST_RENDER)
-      )
-    end
+    FileUtils.rm(TEST_ISO_FILE) if TEST_ISO_FILE.exist?
+
+    @t.create_cloudinit_img_dir(
+      RES_DIR.join('cloud-init', 'common'),
+      TEST_ISO_DIR
+    )
+
+    @t.create_cloudinit_iso_from_dir(TEST_ISO_DIR, TEST_ISO_FILE)
+
+    assert TEST_ISO_FILE.exist?
+    assert TEST_ISO_FILE.size > 380_927
+
+    FileUtils.rm_r(TEST_ISO_DIR)
+    FileUtils.rm(TEST_ISO_FILE)
   end
-
 end

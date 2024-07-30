@@ -31,12 +31,14 @@ module Oozone
     end
 
     def add_facts
+      return unless meta.key?(:facts)
+
       mk_fact_dir
       write_fact_file
     end
 
     def install_packages
-      return unless meta[:packages]
+      return unless meta.key?(:packages)
 
       LOG.info "installing packages: #{meta[:packages].join(', ')}"
       zexecute!(meta[:zone_name], "#{PKG} install #{meta[:packages].join(' ')}")

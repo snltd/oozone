@@ -6,13 +6,24 @@ add net
 set physical=bhyve_net0
 set global-nic=e1000g0
 set allowed-address=192.168.1.80/24
+set defrouter=192.168.1.1
+end
+add attr
+set name=dns-domain
+set type=string
+set value=localnet
+end
+add attr
+set name=resolvers
+set type=string
+set value=192.168.1.26,192.168.1.1
 end
 add device
 set match=/dev/zvol/rdsk/rpool/zones/bhyve/test-bhyve
 end
 add fs
-set dir=/tmp/cloud-init.iso
-set special=/tmp/cloud-init.iso
+set dir=/tmp/cloudinit_cdrom-test-bhyve.iso
+set special=/tmp/cloudinit_cdrom-test-bhyve.iso
 set type=lofs
 set options=ro
 end
@@ -34,5 +45,5 @@ end
 add attr
 set name=cdrom
 set type=string
-set value=/tmp/cloud-init.iso
+set value=/tmp/cloudinit_cdrom-test-bhyve.iso
 end

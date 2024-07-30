@@ -17,8 +17,12 @@ module Oozone
     def initialize(zone_file)
       @file = Pathname.new(zone_file)
       @raw = raw_config(zone_file)
-      @metadata = { zone_name:,
-                    root: Pathname.new(raw[:zonepath]).join('root') }
+      @metadata = {
+        zone_name:,
+        root: Pathname.new(raw[:zonepath]).join('root'),
+        cloudinit_iso_file:
+          Pathname.new("/tmp/cloudinit_cdrom-#{zone_name}.iso")
+      }
       @config = parsed_config
     end
 

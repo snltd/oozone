@@ -16,6 +16,7 @@ PUPPET_SERVER = 'puppet@puppet.localnet' # comment this out to bar calls to it
 PUPPET_SERVER_BIN = Pathname.new('/opt/ooce/bin/puppet')
 READY_SVC = 'svc:/milestone/multi-user-server:default'
 SU = '/bin/su rob -c'
+MKISOFS = Pathname.new('/bin/mkisofs')
 
 VOLUME_ROOT_DS = 'rpool/zones/bhyve'
 

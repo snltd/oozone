@@ -9,7 +9,6 @@ module Oozone
         @config = config
         @metadata = metadata
         @bootdisk = File.join('rpool', 'zones', 'bhyve', @metadata[:zone_name])
-        @cloud_init_iso = '/tmp/cloud-init.iso' # THIS WILL BE DYNAMIC
       end
 
       def decorate!
@@ -42,7 +41,7 @@ module Oozone
           to_add << ['add attr',
                      ['set name=cdrom'],
                      ['set type=string'],
-                     ["set value=#{@cloud_init_iso}"],
+                     ["set value=#{@metadata[:cloudinit_iso_file]}"],
                      'end']
         end
 
@@ -53,8 +52,8 @@ module Oozone
       def add_cloudinit_cdrom(config)
         config << [
           ['add fs',
-           ["set dir=#{@cloud_init_iso}"],
-           ["set special=#{@cloud_init_iso}"],
+           ["set dir=#{@metadata[:cloudinit_iso_file]}"],
+           ["set special=#{@metadata[:cloudinit_iso_file]}"],
            ['set type=lofs'],
            ['set options=ro'],
            'end']

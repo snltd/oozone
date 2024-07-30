@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pty'
 require_relative 'runner'
 require_relative 'constants'
 
@@ -70,7 +71,7 @@ module Oozone
       LOG.info 'Waiting for zone to be ready'
 
       loop do
-        break if ready?
+        return if ready?
 
         sleep 2
       end
@@ -90,6 +91,23 @@ module Oozone
       execute_for_output!(
         "#{SVCS} -z #{zone} -Ho state #{READY_SVC}"
       ) == 'online'
+    end
+
+    # This is a horrible hack to watch a bhyve zone boot.
+    #
+    def wait_for_readiness_console
+      LOG.info 'Waiting for zone to be ready'
+
+      PTY.spawn("#{ZLOGIN} -C #{zone}") do |stdout, stdin, _thr|
+        stdout.each do |line|
+          stdin.puts "\n" if line.include?('ttyS0')
+
+          if line.include?(' login:')
+            stdin.puts '~.'
+            return true
+          end
+        end
+      end
     end
 
     # @return [String, Nil] maybe shouldn't be nil?
