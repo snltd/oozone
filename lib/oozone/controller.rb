@@ -92,6 +92,31 @@ module Oozone
       ) == 'online'
     end
 
+    # This is a horrible hack to watch a bhyve zone boot.
+    #
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    def wait_for_readiness_console
+      log_name = "#{zone}-#{Time.now.strftime('%Y-%m-%d-%H:%M:%S')}-console.log"
+      LOG.info 'Waiting for zone to be ready'
+      File.open(Pathname.new('/var/log').join(log_name), 'w') do |log_file|
+        PTY.spawn("#{ZLOGIN} -C #{zone}") do |stdout, stdin, _thr|
+          stdout.each do |line|
+            log_file.write(line.gsub('s/\e\[[0-9;]*m(?:\e\[K)?', ''))
+
+            stdin.puts "\n" if line.include?('ttyS0')
+
+            if line.include?(' login:')
+              stdin.puts '~.'
+              return true
+            end
+          end
+        end
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
     # @return [String, Nil] maybe shouldn't be nil?
     #
     def state

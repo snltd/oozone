@@ -30,6 +30,7 @@ module Oozone
       end
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def action_zone(zone_file)
         conf = Oozone::ConfigLoader.new(zone_file)
         zone_name = conf.metadata[:zone_name]
@@ -47,7 +48,9 @@ module Oozone
         zone.boot
         zone.wait_for_readiness
         Oozone::Customizer.new(conf).customize!
+        remove_cloudinit_image(zone_name) if conf.metadata[:cloudinit]
       end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       def install_or_clone
@@ -65,6 +68,12 @@ module Oozone
         else
           false
         end
+      end
+
+      def remove_cloudinit_image(zone)
+        LOG.info('Removing cloud-init CD-ROM from zone')
+        execute!("#{ZONECFG} -z #{zone} 'remove attr name=cdrom'")
+        execute!("#{ZONECFG} -z #{zone} 'remove fs type=lofs'")
       end
     end
   end
